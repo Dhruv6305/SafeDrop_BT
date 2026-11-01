@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SafeDrop - Delivery Chain Security System</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#1a56db',
+              700: '#1e40af',
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans", "sans-serif"],
+            "display": ["Plus Jakarta Sans", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Space Grotesk", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .hex-bg {
+      background-color: #f8faff;
+      background-image: radial-gradient(#1a56db 0.65px, transparent 0.65px), radial-gradient(#0ea5e9 0.65px, #f8faff 0.65px);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+      background-opacity: 0.05;
+    }
+  </style>
+</head>
+<body class="bg-[#f8faff] text-slate-800 font-body antialiased min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900">
+<!-- TopNavBar (Shared Component) -->
+<header class="docked full-width top-0 sticky z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between w-full">
+<!-- Brand Logo -->
+<a class="font-headline text-xl font-extrabold text-blue-600 flex items-center gap-2 group" href="#">
+<div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
+<span class="material-symbols-outlined text-[22px]">shield</span>
+</div>
+<span class="tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">Safe<span class="text-blue-600">Drop</span></span>
+</a>
+<!-- Desktop Navigation Links -->
+<nav class="hidden md:flex items-center gap-8 font-headline text-base font-bold tracking-tight">
+<a class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1 flex items-center gap-1.5" href="#">
+<span>Home</span>
+</a>
+<a class="text-slate-600 hover:text-blue-600 font-medium transition-colors" href="#campaigns">
+<span>Campaigns</span>
+</a>
+<a class="text-slate-600 hover:text-blue-600 font-medium transition-colors" href="#claim">
+<span>Claim Package</span>
+</a>
+<a class="text-slate-600 hover:text-blue-600 font-medium transition-colors" href="#fraud-lab">
+<span>Fraud Lab</span>
+</a>
+</nav>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-3">
+<button class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base text-slate-500">lock_reset</span>
+          Verify Hash
+        </button>
+<button class="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-500/20 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-base">account_balance_wallet</span>
+          Connect Wallet
+        </button>
+<div class="h-5 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+<button aria-label="Notifications" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="relative pt-16 pb-20 overflow-hidden hex-bg border-b border-slate-200/80">
+<!-- Glow effect -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[360px] bg-blue-400/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="max-w-7xl mx-auto px-6 text-center">
+<!-- Live Protocol Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50/90 border border-blue-200/70 text-blue-700 text-xs font-semibold shadow-xs mb-8">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+</span>
+<span class="font-label tracking-wide uppercase">Blockchain-Verified Delivery System</span>
+<span class="material-symbols-outlined text-sm text-blue-600">verified</span>
+</div>
+<!-- Headline -->
+<h1 class="font-headline font-bold text-slate-900 text-4xl sm:text-5xl lg:text-6xl tracking-tight max-w-4xl mx-auto leading-[1.12]">
+          Every Package, <span class="text-blue-600 underline decoration-blue-200 decoration-wavy decoration-2 underline-offset-8">Provably Yours.</span>
+</h1>
+<!-- Subtitle -->
+<p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          SafeDrop uses cryptographic verification to prove your package belongs to the shipment — and shows what happens when fraudsters try to cheat the system.
+        </p>
+<!-- CTA Buttons -->
+<div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+<a class="inline-flex items-center gap-2 px-6 py-3.5 bg-blue-600 text-white font-semibold rounded-lg shadow-md shadow-blue-600/25 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/35 active:scale-95 transition-all text-sm group" href="#fraud-lab">
+<span class="material-symbols-outlined text-xl group-hover:rotate-12 transition-transform">science</span>
+<span>Try the Fraud Lab</span>
+<span class="material-symbols-outlined text-lg group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-2 px-6 py-3.5 border border-slate-300 bg-white text-slate-800 font-semibold rounded-lg shadow-xs hover:border-blue-600 hover:text-blue-600 active:scale-95 transition-all text-sm" href="#claim">
+<span class="material-symbols-outlined text-xl text-slate-500">inventory_2</span>
+<span>Claim Your Package</span>
+</a>
+</div>
+<!-- Metric micro-banner -->
+<div class="mt-12 pt-8 border-t border-slate-200/60 max-w-3xl mx-auto grid grid-cols-3 gap-6 text-left">
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
+<span class="material-symbols-outlined text-blue-600">hub</span>
+</div>
+<div>
+<p class="font-label text-xs text-slate-500 font-medium">Merkle Depth</p>
+<p class="font-headline font-bold text-slate-900 text-sm">32 Levels Log₂</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
+<span class="material-symbols-outlined text-emerald-600">verified_user</span>
+</div>
+<div>
+<p class="font-label text-xs text-slate-500 font-medium">Domain Tagging</p>
+<p class="font-headline font-bold text-slate-900 text-sm">SHA-256 Hardened</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
+<span class="material-symbols-outlined text-amber-600">security_update_good</span>
+</div>
+<div>
+<p class="font-label text-xs text-slate-500 font-medium">Preimage Defense</p>
+<p class="font-headline font-bold text-slate-900 text-sm">Zero-Collusion</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3 Feature Cards in a row -->
+<section class="py-16 bg-white border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1: Delivery Chain -->
+<div class="group relative bg-[#f8faff] rounded-xl p-8 border border-slate-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-blue-100/80 border border-blue-200 flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">link</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
+                Delivery Chain
+              </h3>
+<p class="text-slate-600 leading-relaxed text-sm">
+                Each shipment creates an unforgeable chain of package hashes. One tampered package = broken chain.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-label text-slate-500">
+<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              Immutable Merkle Path
+            </div>
+</div>
+<!-- Card 2: Instant Verification -->
+<div class="group relative bg-[#f8faff] rounded-xl p-8 border border-slate-200 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/5 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-emerald-100/80 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">verified</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors">
+                Instant Verification
+              </h3>
+<p class="text-slate-600 leading-relaxed text-sm">
+                Claim your package in seconds using a cryptographic receipt — no central authority needed.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-label text-slate-500">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              Sub-second Proof Evaluation
+            </div>
+</div>
+<!-- Card 3: Fraud Simulation -->
+<div class="group relative bg-[#f8faff] rounded-xl p-8 border border-slate-200 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-300 flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-amber-100/80 border border-amber-200 flex items-center justify-center text-amber-600 mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">shield_lock</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-slate-900 mb-3 group-hover:text-amber-700 transition-colors">
+                Fraud Simulation
+              </h3>
+<p class="text-slate-600 leading-relaxed text-sm">
+                See exactly how a fraudster tries to steal packages — and how our hardened system catches them.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-slate-200/60 flex items-center gap-2 text-xs font-label text-slate-500">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              Interactive Threat Playground
+            </div>
+</div>
+</div>
+</div>
+</section>
+<!-- 'Active Shipments' Section -->
+<section class="py-16 max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-blue-600 text-lg">local_shipping</span>
+<span class="text-xs font-label font-bold text-blue-600 uppercase tracking-wider">Live Consensus Feed</span>
+</div>
+<h2 class="font-headline text-3xl font-extrabold text-slate-900 tracking-tight">Active Shipments</h2>
+<p class="text-slate-600 text-sm mt-1">Live Merkle-tree tracking across standard and hardened protocol deployments.</p>
+</div>
+<div class="flex items-center gap-2 text-xs font-label text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs self-start md:self-auto">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Synchronized to Block #8,941,202
+        </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1: Vulnerable Shipment -->
+<div class="bg-white rounded-xl border border-rose-200 p-6 sm:p-7 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-bl-full pointer-events-none"></div>
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600">
+<span class="material-symbols-outlined text-2xl">local_shipping</span>
+</div>
+<div>
+<h3 class="font-headline text-lg font-bold text-slate-900">Shipment Alpha - Standard</h3>
+<p class="font-label text-xs text-slate-500">Manifest: 0x9b7...2f01a • Naive Binary Tree</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label text-xs font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+<span class="material-symbols-outlined text-xs">gpp_maybe</span>
+              VULNERABLE
+            </span>
+</div>
+<!-- Metrics Grid -->
+<div class="mt-6 grid grid-cols-3 gap-3 p-4 bg-slate-50/80 rounded-lg border border-slate-200/70">
+<div class="text-center">
+<div class="font-headline text-2xl font-bold text-slate-800">8</div>
+<div class="text-xs text-slate-500 font-medium mt-0.5">packages</div>
+</div>
+<div class="text-center border-x border-slate-200">
+<div class="font-headline text-2xl font-bold text-slate-800">0</div>
+<div class="text-xs text-slate-500 font-medium mt-0.5">verified</div>
+</div>
+<div class="text-center">
+<div class="font-headline text-2xl font-bold text-rose-600">3</div>
+<div class="text-xs text-slate-500 font-medium mt-0.5">fraud attempts</div>
+</div>
+</div>
+<!-- Status Indicator & Attack Detail -->
+<div class="mt-5 p-3.5 rounded-lg bg-rose-50/70 border border-rose-100 flex items-center gap-3 text-xs text-rose-800">
+<span class="material-symbols-outlined text-rose-600 text-lg flex-shrink-0">warning</span>
+<div class="leading-tight">
+<span class="font-semibold">Vulnerable to preimage attack / length extension</span>
+<p class="text-rose-600/80 text-[11px] mt-0.5 font-label">Leaves are indistinguishable from internal routing nodes.</p>
+</div>
+</div>
+<div class="mt-5 flex items-center justify-between text-xs pt-4 border-t border-slate-100">
+<span class="font-label text-slate-400">Route: JFK → LHR</span>
+<button class="text-rose-600 font-semibold hover:underline flex items-center gap-1">
+              Inspect Exploit Vector <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Secured Shipment -->
+<div class="bg-white rounded-xl border border-emerald-200 p-6 sm:p-7 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-bl-full pointer-events-none"></div>
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+<span class="material-symbols-outlined text-2xl">shield</span>
+</div>
+<div>
+<h3 class="font-headline text-lg font-bold text-slate-900">Shipment Alpha - Hardened</h3>
+<p class="font-label text-xs text-slate-500">Manifest: 0x4a1...9c3b8 • RFC-6962 Domain Tagged</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 font-label text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-xs">verified</span>
+              SECURED
+            </span>
+</div>
+<!-- Metrics Grid -->
+<div class="mt-6 grid grid-cols-3 gap-3 p-4 bg-slate-50/80 rounded-lg border border-slate-200/70">
+<div class="text-center">
+<div class="font-headline text-2xl font-bold text-slate-800">8</div>
+<div class="text-xs text-slate-500 font-medium mt-0.5">packages</div>
+</div>
+<div class="text-center border-x border-slate-200">
+<div class="font-headline text-2xl font-bold text-emerald-700">1</div>
+<div class="text-xs text-slate-500 font-medium mt-0.5">verified</div>
+</div>
+<div class="text-center">
+<div class="font-headline text-2xl font-bold text-emerald-600">3</div>
+<div class="text-xs text-slate-500 font-medium mt-0.5">fraud attempts blocked</div>
+</div>
+</div>
+<!-- Status Indicator & Hardening Detail -->
+<div class="mt-5 p-3.5 rounded-lg bg-emerald-50/70 border border-emerald-100 flex items-center gap-3 text-xs text-emerald-800">
+<span class="material-symbols-outlined text-emerald-600 text-lg flex-shrink-0">verified_user</span>
+<div class="leading-tight">
+<span class="font-semibold">Hardened domain separation active</span>
+<p class="text-emerald-700/80 text-[11px] mt-0.5 font-label">Pre-hashed prefixes 0x00 and 0x01 enforce strict semantic integrity.</p>
+</div>
+</div>
+<div class="mt-5 flex items-center justify-between text-xs pt-4 border-t border-slate-100">
+<span class="font-label text-slate-400">Route: JFK → LHR</span>
+<button class="text-blue-600 font-semibold hover:underline flex items-center gap-1">
+              Verify On-Chain Receipt <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Comparison Table Section -->
+<section class="py-16 bg-white border-t border-slate-200">
+<div class="max-w-5xl mx-auto px-6">
+<div class="text-center max-w-2xl mx-auto mb-12">
+<span class="font-label text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200/60">Specification Breakdown</span>
+<h2 class="font-headline text-3xl font-extrabold text-slate-900 tracking-tight mt-3">Standard vs Secured Mode</h2>
+<p class="text-slate-600 text-sm mt-2">Cryptographic primitive comparison between naive hash tree manifests and domain-separated SafeDrop protocol.</p>
+</div>
+<!-- Table Container -->
+<div class="overflow-hidden border border-slate-200 rounded-xl shadow-xs bg-white">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/80 border-b border-slate-200">
+<th class="py-4 px-6 text-xs font-headline font-bold text-slate-700 tracking-wider" scope="col">Feature</th>
+<th class="py-4 px-6 text-xs font-headline font-bold text-slate-700 tracking-wider" scope="col">Standard</th>
+<th class="py-4 px-6 text-xs font-headline font-bold text-blue-700 tracking-wider bg-blue-50/50" scope="col">Secured</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 text-sm">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">fingerprint</span>
+                    Package seal
+                  </td>
+<td class="py-4 px-6 font-label text-xs text-slate-600">
+<code class="bg-slate-100 px-2.5 py-1 rounded border border-slate-200 text-slate-800">SHA256(data)</code>
+</td>
+<td class="py-4 px-6 font-label text-xs text-blue-900 bg-blue-50/30">
+<code class="bg-blue-100/70 px-2.5 py-1 rounded border border-blue-200 font-semibold text-blue-700">SHA256(PACKAGE: + data)</code>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">account_tree</span>
+                    Hub stamp
+                  </td>
+<td class="py-4 px-6 font-label text-xs text-slate-600">
+<code class="bg-slate-100 px-2.5 py-1 rounded border border-slate-200 text-slate-800">SHA256(left+right)</code>
+</td>
+<td class="py-4 px-6 font-label text-xs text-blue-900 bg-blue-50/30">
+<code class="bg-blue-100/70 px-2.5 py-1 rounded border border-blue-200 font-semibold text-blue-700">SHA256(HUB: + left+right)</code>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">straighten</span>
+                    Receipt length check
+                  </td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                      None
+                    </span>
+</td>
+<td class="py-4 px-6 bg-blue-50/30">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+<span class="material-symbols-outlined text-xs">check</span>
+                      Required
+                    </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">policy</span>
+                    Fraud result
+                  </td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+<span class="material-symbols-outlined text-sm">error</span>
+                      Accepted (Tamper Risk)
+                    </span>
+</td>
+<td class="py-4 px-6 bg-blue-50/30">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-sm">security</span>
+                      Blocked (Provably Secure)
+                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Academic Citation Note -->
+<div class="mt-6 flex items-center justify-between text-xs text-slate-500 font-label">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-base">menu_book</span>
+<span>Based on FSA Paper — Songsom et al. 2025</span>
+</div>
+<span class="text-slate-400">Formal Verification: Coq Proof Assistant (v8.19)</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="docked full-width bottom bg-slate-50 border-t border-slate-200">
+<div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+<div class="flex flex-col sm:flex-row items-center gap-3">
+<span class="font-headline text-sm font-bold text-slate-800 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-blue-600 text-lg">shield</span>
+          SafeDrop
+        </span>
+<span class="hidden sm:inline text-slate-300">|</span>
+<p class="font-body text-xs text-slate-500 text-center sm:text-left">
+          © 2025 SafeDrop. Provably Secure Delivery Chain Protocol. Based on Merkle Tree Consensus Research.
+        </p>
+</div>
+<nav class="flex flex-wrap items-center justify-center gap-6 font-body text-xs text-slate-500">
+<a class="hover:text-blue-600 transition-colors hover:underline" href="#whitepaper">Whitepaper</a>
+<a class="hover:text-blue-600 transition-colors hover:underline" href="#audit">Cryptographic Audit</a>
+<a class="hover:text-blue-600 transition-colors hover:underline" href="#docs">Protocol Docs</a>
+<a class="hover:text-blue-600 transition-colors hover:underline" href="#contact">Contact Security Lab</a>
+</nav>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,19 @@
+{
+  "name": "safedrop-contracts",
+  "version": "1.0.0",
+  "description": "SafeDrop Smart Contracts & Hardhat Test Suite",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy": "npx hardhat run scripts/deploy.js",
+    "node": "npx hardhat node"
+  },
+  "keywords": ["merkle-tree", "airdrop", "security", "secondary-preimage", "smart-contracts", "solidity"],
+  "author": "SafeDrop Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.4"
+  }
+}

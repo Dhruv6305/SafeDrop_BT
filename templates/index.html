@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeDrop — Merkle Airdrop Security</title>
+  <meta name="description"
+    content="Interactive visualization of Merkle proof airdrops and secondary preimage attacks." />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/main.css" />
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- ══ WALKTHROUGH OVERLAY ══════════════════════════════════════ -->
+    <div class="walkthrough-overlay hidden" id="walkthrough-overlay">
+      <div class="walkthrough-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="brand-icon" style="font-size:1.2rem;">🛡️</div>
+            <span style="font-weight:700;font-size:0.85rem;">SafeDrop</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="walkSkip()">Skip</button>
+        </div>
+        <div class="walkthrough-step-indicator">
+          <div class="walk-dot active" id="wdot-0"></div>
+          <div class="walk-dot" id="wdot-1"></div>
+          <div class="walk-dot" id="wdot-2"></div>
+          <div class="walk-dot" id="wdot-3"></div>
+          <div class="walk-dot" id="wdot-4"></div>
+        </div>
+        <div class="walkthrough-visual" id="walk-visual">
+          <div style="font-size:3rem;">🪂</div>
+        </div>
+        <h3 class="walkthrough-title" id="walk-title">What is a Token Airdrop?</h3>
+        <p class="walkthrough-body" id="walk-body"
+          style="font-size:0.82rem;line-height:1.6;color:var(--text-secondary);"></p>
+        <div class="walkthrough-nav">
+          <button class="btn btn-ghost btn-sm" id="walk-prev" onclick="walkPrev()" style="visibility:hidden;">←
+            Back</button>
+          <button class="btn btn-primary btn-sm" id="walk-next" onclick="walkNext()">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ NAVBAR ════════════════════════════════════════════════════ -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <div class="navbar-brand">
+          <div class="brand-icon">🛡️</div>
+          <span class="brand-name">SafeDrop</span>
+          <span class="brand-tag">EAL6</span>
+        </div>
+        <div class="nav-tabs">
+          <button class="nav-tab active" data-tab="home" id="tab-home"> <span class="tab-icon">⬡</span><span
+              class="tab-label">Home</span> </button>
+          <button class="nav-tab" data-tab="admin" id="tab-admin"> <span class="tab-icon">⚙</span><span
+              class="tab-label">Admin</span> </button>
+          <button class="nav-tab" data-tab="claim" id="tab-claim"> <span class="tab-icon">◎</span><span
+              class="tab-label">Claim</span> </button>
+          <button class="nav-tab attack-tab" data-tab="attack" id="tab-attack"><span class="tab-icon">⚔</span><span
+              class="tab-label">Attack Lab</span></button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="network-badge" id="network-status-badge" title="Chain ID: 31337 (SafeDrop EVM Testnet)">
+            <span class="status-pulse-dot" style="background:#10b981;"></span>
+            <span>EVM Testnet</span>
+          </div>
+          <button class="btn btn-outline btn-sm" id="wallet-connect-btn" style="display:flex;align-items:center;gap:6px;font-size:0.75rem;padding:4px 10px;">
+            <span>🦊</span>
+            <span>Connect Wallet</span>
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="openWalkthrough()" style="font-size:0.75rem;">? Guide</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+
+      <!-- ══════ HOME — full canvas demo ═══════════════════════════════ -->
+      <section class="page-section active" id="section-home">
+        <div class="home-canvas">
+          <!-- Dot-grid + particles background -->
+          <div id="hash-particles" class="hash-particles"></div>
+
+          <!-- Hero overlay (text minimal) -->
+          <div class="home-hero-overlay">
+            <div class="hero-eyebrow">🔬 Songsom et al., 2025 · FSA Framework</div>
+            <h1 class="hero-heading">
+              <span class="gradient-text">Merkle Airdrops</span><br>
+              <span style="font-size:0.55em;font-weight:600;color:var(--text-secondary);">Secondary Preimage Attack
+                Demo</span>
+            </h1>
+            <div class="hero-cta">
+              <button class="btn btn-danger btn-lg" onclick="App.switchTab('attack')">⚔ Attack Lab</button>
+              <button class="btn btn-secondary btn-lg" onclick="App.switchTab('admin')">⚙ Admin</button>
+              <button class="btn btn-ghost btn-lg" onclick="openWalkthrough()">? Guide</button>
+            </div>
+          </div>
+
+          <!-- Live campaign visual cards -->
+          <div class="home-campaigns" id="home-campaigns">
+            <div class="skeleton home-campaign-skeleton"></div>
+            <div class="skeleton home-campaign-skeleton"></div>
+          </div>
+
+          <!-- Visual comparison strip at bottom -->
+          <div class="comparison-strip">
+            <div class="cmp-strip-item cmp-naive">
+              <div class="cmp-strip-icon">🔓</div>
+              <div class="cmp-strip-label">Naive — Vulnerable</div>
+              <div class="cmp-strip-sub">No domain tags · No length check</div>
+            </div>
+            <div class="cmp-strip-arrow">→</div>
+            <div class="cmp-strip-item cmp-vs">
+              <div class="cmp-strip-icon" style="font-size:1.5rem;">⚡</div>
+              <div class="cmp-strip-label">Attack</div>
+              <div class="cmp-strip-sub">Internal node ≡ forged leaf</div>
+            </div>
+            <div class="cmp-strip-arrow">→</div>
+            <div class="cmp-strip-item cmp-hard">
+              <div class="cmp-strip-icon">🛡️</div>
+              <div class="cmp-strip-label">Hardened — Safe</div>
+              <div class="cmp-strip-sub">LEAF: prefix · proof length == depth</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ ADMIN ══════════════════════════════════════════════════ -->
+      <section class="page-section" id="section-admin">
+        <div class="admin-layout">
+
+          <!-- Left: Visual mode selector + form -->
+          <div class="admin-form-col">
+            <div style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Create Campaign</div>
+
+            <div class="form-group">
+              <input class="input" type="text" id="campaign-name" placeholder="Campaign name…" required />
+            </div>
+
+            <!-- Visual mode toggle -->
+            <input type="hidden" id="mode-input" value="naive" />
+            <div
+              style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">
+              Security Mode</div>
+            <div class="mode-visual-toggle">
+              <div class="mode-visual-option mode-visual-active" id="mode-naive" onclick="selectMode('naive')">
+                <div class="mode-visual-icon">🔓</div>
+                <div class="mode-visual-name" style="color:var(--danger-text);">Naive</div>
+                <div class="mode-visual-desc">Vulnerable</div>
+              </div>
+              <div class="mode-visual-option" id="mode-hardened" onclick="selectMode('hardened')">
+                <div class="mode-visual-icon">🛡️</div>
+                <div class="mode-visual-name" style="color:var(--success-text);">Hardened</div>
+                <div class="mode-visual-desc">Protected</div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:1rem;">
+              <div
+                style="font-size:0.72rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">
+                Recipients (CSV)</div>
+              <textarea class="textarea" id="csv-textarea" placeholder="0xABCD…,100&#10;0xEF01…,250"
+                style="height:120px;font-size:0.78rem;"></textarea>
+              <div style="display:flex;gap:6px;margin-top:6px;">
+                <label class="btn btn-ghost btn-sm" style="cursor:pointer;">
+                  📁 Upload
+                  <input type="file" id="csv-file" accept=".csv,.txt" onchange="handleFileSelect(event)"
+                    style="display:none;" />
+                </label>
+                <button type="button" class="btn btn-ghost btn-sm" onclick="loadSampleCSV()">📋 Sample</button>
+              </div>
+            </div>
+
+            <div id="create-status" class="alert" style="display:none;"></div>
+
+            <button class="btn btn-primary w-full" id="build-tree-btn" onclick="submitCreateCampaign(event)">
+              Build Tree
+            </button>
+          </div>
+
+          <!-- Right: Live campaign list as visual cards -->
+          <div class="admin-preview-col">
+            <div style="font-weight:800;font-size:1.1rem;margin-bottom:1rem;">Campaigns</div>
+            <div id="admin-campaign-cards"></div>
+
+            <div style="margin-top:1rem;">
+              <div class="table-wrapper">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Campaign</th>
+                      <th>Mode</th>
+                      <th>Root</th>
+                      <th style="text-align:center">Recip</th>
+                      <th style="text-align:center">Claims</th>
+                      <th style="text-align:center">Attacks</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-campaign-tbody">
+                    <tr>
+                      <td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem;">Loading…</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ CLAIM ══════════════════════════════════════════════════ -->
+      <section class="page-section" id="section-claim">
+        <div class="claim-portal">
+
+          <!-- Claim Portal Header -->
+          <div class="claim-portal-header">
+            <div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-primary);letter-spacing:-0.02em;">Claim Package & Allocation</h2>
+                <span class="badge" style="background:var(--teal-bg);color:var(--teal-text);border:1px solid var(--teal-border);font-size:0.68rem;font-weight:700;">Merkle Proof Verification</span>
+              </div>
+              <p style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">
+                Verify your cryptographic inclusion in the airdrop Merkle tree and claim your allocated tokens.
+              </p>
+            </div>
+            <div class="campaign-status-badge" id="claim-campaign-badge">
+              <span class="status-pulse-dot"></span>
+              <span id="claim-campaign-badge-text">Select a Campaign to Start</span>
+            </div>
+          </div>
+
+          <!-- Claim Main Grid: Form / Proof on Left + Campaign Parameters & History on Right -->
+          <div class="claim-grid">
+
+            <!-- LEFT: Verification & Claim Card -->
+            <div class="claim-card-main">
+              <div class="claim-card-header">
+                <span class="claim-card-title">Recipient Verification & Claim</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">Step 1: Check → Step 2: Claim</span>
+              </div>
+
+              <div class="claim-card-body">
+                <div class="form-group">
+                  <label class="form-label">Airdrop Campaign</label>
+                  <select class="select" id="claim-campaign-select" onchange="onClaimCampaignChange()" style="width:100%;font-size:0.85rem;">
+                    <option value="">-- Choose Airdrop Campaign --</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Recipient Wallet Address</label>
+                  <div style="display:flex;gap:8px;">
+                    <input class="input" type="text" id="claim-address" placeholder="0xYour Ethereum / EVM Address…" style="flex:1;font-family:var(--font-mono);font-size:0.82rem;" onkeydown="if(event.key==='Enter')lookupProof()" />
+                    <button class="btn btn-primary" id="lookup-btn" onclick="lookupProof()" style="white-space:nowrap;padding:0 1.25rem;">
+                      Check Eligibility
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Quick Address Pills -->
+                <div style="margin-top:0.25rem;">
+                  <div style="font-size:0.7rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;display:flex;justify-content:space-between;">
+                    <span>Demo Recipient Addresses (Click to Autofill & Test):</span>
+                  </div>
+                  <div class="demo-address-pills">
+                    <button type="button" class="addr-pill" onclick="setAddr('0x1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9A0B')">
+                      <span class="addr-pill-tag">Addr 1</span>
+                      <span class="addr-pill-hash">0x1A2B…9A0B</span>
+                      <span class="addr-pill-amt">100 TKN</span>
+                    </button>
+                    <button type="button" class="addr-pill" onclick="setAddr('0x3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9A0B1C2D')">
+                      <span class="addr-pill-tag">Addr 2</span>
+                      <span class="addr-pill-hash">0x3C4D…1C2D</span>
+                      <span class="addr-pill-amt">250 TKN</span>
+                    </button>
+                    <button type="button" class="addr-pill" onclick="setAddr('0x5E6F7A8B9C0D1E2F3A4B5C6D7E8F9A0B1C2D3E4F')">
+                      <span class="addr-pill-tag">Addr 3</span>
+                      <span class="addr-pill-hash">0x5E6F…3E4F</span>
+                      <span class="addr-pill-amt">500 TKN</span>
+                    </button>
+                    <button type="button" class="addr-pill" onclick="setAddr('0x9C0D1E2F3A4B5C6D7E8F9A0B1C2D3E4F5A6B7C8D')">
+                      <span class="addr-pill-tag">Addr 5</span>
+                      <span class="addr-pill-hash">0x9C0D…7C8D</span>
+                      <span class="addr-pill-amt">1000 TKN</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Proof & Verification Result Box -->
+                <div id="proof-result" style="margin-top:1rem;">
+                  <div class="proof-empty-placeholder">
+                    <div style="font-size:2.2rem;margin-bottom:8px;">🛡️</div>
+                    <div style="font-weight:700;font-size:0.95rem;color:var(--text-primary);">Awaiting Address Check</div>
+                    <p style="font-size:0.78rem;color:var(--text-muted);max-width:340px;margin:4px auto 0;line-height:1.5;">
+                      Select a campaign and enter your address above to verify your allocation and inspect the cryptographic sibling proof path.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: Campaign Details & Live Claim History -->
+            <div class="claim-card-side">
+
+              <!-- Security & Campaign Parameters -->
+              <div class="claim-side-card" id="claim-campaign-stats-card">
+                <div class="side-card-title">Campaign Parameters</div>
+                <div class="campaign-params-grid">
+                  <div class="param-box">
+                    <div class="param-label">Security Engine</div>
+                    <div class="param-val" id="claim-param-mode">—</div>
+                  </div>
+                  <div class="param-box">
+                    <div class="param-label">Tree Depth</div>
+                    <div class="param-val" id="claim-param-depth">—</div>
+                  </div>
+                  <div class="param-box">
+                    <div class="param-label">Recipients</div>
+                    <div class="param-val" id="claim-param-recipients">—</div>
+                  </div>
+                  <div class="param-box">
+                    <div class="param-label">Claims Processed</div>
+                    <div class="param-val" id="claim-param-claims">—</div>
+                  </div>
+                </div>
+                <div style="margin-top:0.75rem;">
+                  <div class="param-label" style="margin-bottom:4px;">Published Merkle Root</div>
+                  <div class="hash-box" id="claim-param-root" style="font-size:0.72rem;">Select a campaign to inspect root</div>
+                </div>
+              </div>
+
+              <!-- Live Claim History Log -->
+              <div class="claim-side-card" style="flex:1;display:flex;flex-direction:column;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
+                  <div class="side-card-title" style="margin-bottom:0;">Live Claim Activity</div>
+                  <button class="btn btn-ghost btn-sm" onclick="loadClaimHistory()" title="Refresh Claim Activity" style="font-size:0.7rem;padding:3px 8px;">
+                    ↻ Refresh
+                  </button>
+                </div>
+
+                <div class="table-wrapper" style="flex:1;max-height:260px;overflow-y:auto;">
+                  <table style="width:100%;font-size:0.75rem;">
+                    <thead>
+                      <tr>
+                        <th>Recipient</th>
+                        <th style="text-align:right;">Tokens</th>
+                        <th style="text-align:center;">Status</th>
+                        <th>Note</th>
+                        <th style="text-align:right;">Time</th>
+                      </tr>
+                    </thead>
+                    <tbody id="claim-history-tbody">
+                      <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1.5rem;">Select a campaign to view claims.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ ATTACK LAB ════════════════════════════════════════════ -->
+      <section class="page-section" id="section-attack">
+
+        <!-- Attack Lab Header Bar -->
+        <div class="attack-header-bar">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <h2 style="font-size:1.35rem;font-weight:800;color:var(--text-primary);letter-spacing:-0.02em;">Attack Lab: Secondary Preimage Exploit</h2>
+              <span class="badge" style="background:var(--danger-bg);color:var(--danger-text);border:1px solid var(--danger-border);font-size:0.65rem;font-weight:700;">CVE / PoC Simulator</span>
+            </div>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;">
+              Simulate how intermediate tree nodes can be submitted as forged leaves against <strong>Naive</strong> vs <strong>Hardened</strong> Merkle airdrops.
+            </p>
+          </div>
+
+          <div class="attack-header-controls">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <select class="select" id="attack-campaign-select" style="min-width:210px;font-size:0.8rem;height:36px;">
+                <option value="">-- Select Campaign --</option>
+              </select>
+              <button class="btn btn-primary btn-sm" id="load-tree-btn" onclick="attackLoadTree()" style="height:36px;padding:0 14px;white-space:nowrap;">
+                Load Tree
+              </button>
+            </div>
+            <div class="preset-pill-group">
+              <button class="preset-pill preset-pill-danger" onclick="runPreset('naive-attack')">⚔ Naive Exploit</button>
+              <button class="preset-pill preset-pill-success" onclick="runPreset('hardened')">🛡 Hardened Defense</button>
+              <button class="btn btn-ghost btn-sm" onclick="resetAttack()" title="Reset visualizer" style="height:34px;">↺ Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Workspace: Visual Merkle Tree Canvas (Left) + Exploit Console Dock (Right) -->
+        <div class="attack-layout">
+
+          <!-- LEFT: Interactive Merkle Tree Canvas Stage -->
+          <div class="attack-canvas-col">
+
+            <!-- Floating State Caption -->
+            <div class="canvas-caption-float" id="canvas-caption">
+              Select a campaign above and click <b>Load Tree</b>
+            </div>
+
+            <!-- SVG Tree Canvas -->
+            <div class="tree-canvas-wrap">
+              <svg id="attack-tree-svg" style="width:100%;display:block;min-height:100%;">
+                <text x="50%" y="44%" text-anchor="middle" fill="#cbd5e1" font-size="3.5rem">⚔</text>
+                <text x="50%" y="56%" text-anchor="middle" fill="#94a3b8" font-size="14" font-family="Inter,sans-serif">Load a campaign to visualize Merkle tree structure</text>
+              </svg>
+            </div>
+
+            <!-- Embedded Timeline Ribbon (slides up during attack verification) -->
+            <div class="timeline-strip hidden" id="timeline-strip">
+              <div class="timeline-pills" id="timeline-pills"></div>
+            </div>
+
+            <!-- Legend Bar -->
+            <div class="tree-legend-bar">
+              <div class="legend-item"><span class="legend-dot" style="background:#f0fdfa;border-color:#0d9488;"></span>Leaf Node</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#eef2ff;border-color:#4f46e5;"></span>Internal Node · <strong>Click to Target</strong></div>
+              <div class="legend-item"><span class="legend-dot" style="background:#fffbeb;border-color:#d97706;"></span>Merkle Root</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#fff1f2;border-color:#e11d48;"></span>Targeted / Forged</div>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+                <span style="font-size:0.65rem;color:var(--text-muted);">🖱 Drag to Pan · Scroll to Zoom</span>
+              </div>
+            </div>
+
+            <!-- Playback & Speed Controls -->
+            <div class="playback-bar">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:0.65rem;color:var(--text-muted);font-weight:700;letter-spacing:0.04em;">SIMULATION SPEED</span>
+                <div class="speed-pills">
+                  <button class="speed-pill" data-speed="0.5">0.5×</button>
+                  <button class="speed-pill active" data-speed="1">1×</button>
+                  <button class="speed-pill" data-speed="2">2×</button>
+                  <button class="speed-pill" data-speed="4">4×</button>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <button class="play-btn" onclick="resetAttack()" title="Reset Animation">↺</button>
+                <button class="play-btn primary" onclick="togglePlayPause()" id="play-pause-btn" title="Play / Pause">⏸</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: Exploit Console Dock (380px) -->
+          <aside class="attack-dock">
+
+            <!-- Tree Parameters & Root Hash Overview -->
+            <div class="dock-section hidden" id="dock-tree-info"></div>
+
+            <!-- Target Selection & Forge Studio Controls -->
+            <div class="dock-section hidden" id="dock-controls">
+              <div class="dock-label">Targeted Collision Entry</div>
+
+              <!-- Forged Leaf Preview Panel -->
+              <div class="forge-panel hidden" id="forge-panel"></div>
+
+              <!-- Launch Exploit Button -->
+              <button class="btn btn-attack w-full" id="launch-btn" onclick="launchAttack()" disabled style="margin-top:0.75rem;">
+                ⚔ Launch Exploit Simulation
+              </button>
+            </div>
+
+            <!-- Verification Outcome Panel -->
+            <div class="dock-section hidden" id="dock-result"></div>
+
+            <!-- Attack History Log -->
+            <div class="dock-section dock-history-section">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div class="dock-label" style="margin-bottom:0;">Attack Attempt Log</div>
+                <button class="btn btn-ghost btn-sm" style="font-size:0.62rem;padding:2px 6px;" onclick="loadAttackHistory()">↻ Refresh</button>
+              </div>
+              <div class="table-wrapper dock-table-wrapper">
+                <table style="width:100%;font-size:0.68rem;">
+                  <thead>
+                    <tr>
+                      <th>Status</th>
+                      <th>Target Node</th>
+                      <th style="text-align:right">Tokens</th>
+                      <th style="text-align:center">Real</th>
+                      <th style="text-align:center">Forged</th>
+                    </tr>
+                  </thead>
+                  <tbody id="attack-history-tbody">
+                    <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:1.5rem;">Load a campaign to view attacks.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </aside>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- App footer -->
+    <footer class="app-footer">
+      SafeDrop · Secondary Preimage Attack Demo · Flask + SQLite + Vanilla JS
+    </footer>
+
+  </div><!-- /app-shell -->
+
+  <!-- Status Flash (full-screen) -->
+  <div id="status-flash" style="display:none;"></div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts (order matters) -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/hash-scramble.js"></script>
+  <script src="/static/js/identicon.js"></script>
+  <script src="/static/js/tree.js"></script>
+  <script src="/static/js/timeline.js"></script>
+  <script src="/static/js/walkthrough.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/admin.js"></script>
+  <script src="/static/js/claim.js"></script>
+  <script src="/static/js/attack.js"></script>
+  <script src="/static/js/blockchain.js"></script>
+
+  <script>
+    // Inline helpers
+    function setAddr(a) {
+      const el = document.getElementById('claim-address');
+      if (el) {
+        el.value = a;
+        if (typeof lookupProof === 'function') lookupProof();
+      }
+    }
+    // Initialize Web3Client on load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.Web3Client) window.Web3Client.init();
+    });
+  </script>
+</body>
+
+</html>

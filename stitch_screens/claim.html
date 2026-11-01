@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#f8faff] text-slate-800" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SafeDrop - Claim Package</title>
+<!-- Google Fonts: Plus Jakarta Sans, Inter, Space Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration matching Design System Tokens -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Hexagonal blueprint grid watermark */
+    .bg-hex-grid {
+      background-image: radial-gradient(rgba(26, 86, 219, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col font-body antialiased selection:bg-blue-100 selection:text-blue-700">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-white/95 dark:bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-200 docked full-width top-0 sticky z-50">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between w-full">
+<!-- Brand Logo -->
+<div class="flex items-center gap-8">
+<a class="font-headline text-xl font-extrabold text-blue-600 dark:text-blue-600 flex items-center gap-2" href="#">
+<div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<span class="tracking-tight text-slate-900">Safe<span class="text-blue-600">Drop</span></span>
+</a>
+<!-- Desktop Navigation Links -->
+<nav class="hidden md:flex items-center gap-7 font-headline text-sm">
+<a class="text-slate-600 hover:text-blue-600 font-medium transition-colors" href="#">Home</a>
+<a class="text-slate-600 hover:text-blue-600 font-medium transition-colors" href="#">Campaigns</a>
+<a class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1" href="#">Claim Package</a>
+<a class="text-slate-600 hover:text-blue-600 font-medium transition-colors" href="#">Fraud Lab</a>
+</nav>
+</div>
+<!-- Trailing Action Buttons and Icons -->
+<div class="flex items-center gap-3">
+<button class="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold font-label text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors border border-slate-200">
+<span class="material-symbols-outlined text-[16px] text-blue-600">verified</span>
+<span>Verify Hash</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold font-label text-white bg-blue-600 hover:bg-blue-700 active:scale-95 rounded-lg shadow-sm shadow-blue-600/30 transition-all duration-150">
+<span class="material-symbols-outlined text-[16px]">account_balance_wallet</span>
+<span>Connect Wallet</span>
+</button>
+<div class="h-5 w-px bg-slate-200 mx-1"></div>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[19px]">notifications</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors" title="Security Node Shield">
+<span class="material-symbols-outlined text-[19px]">shield</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 bg-hex-grid py-8">
+<div class="max-w-7xl mx-auto px-6">
+<!-- Page Header with Cryptographic Trust Badges -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-200">
+<div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold font-label mb-3">
+<span class="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
+<span>RFC-6962 Domain-Separated Verification Active</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="p-2.5 rounded-xl bg-blue-600/10 text-blue-600">
+<span class="material-symbols-outlined text-[28px]">inventory_2</span>
+</div>
+<h1 class="font-headline text-3xl font-extrabold text-slate-900 tracking-tight">
+              Claim Your Package
+            </h1>
+</div>
+<p class="font-body text-slate-600 mt-2 text-sm max-w-2xl">
+            Enter your wallet address to retrieve your cryptographic delivery receipt and claim your tokens from a verified shipment.
+          </p>
+</div>
+<div class="flex items-center gap-2 self-start md:self-auto bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-sm text-xs font-label">
+<span class="text-slate-400 font-medium">Consensus Epoch:</span>
+<span class="font-bold text-slate-800">#482-B9</span>
+<span class="text-emerald-500 flex items-center ml-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span class="ml-0.5 font-medium">Synchronized</span>
+</span>
+</div>
+</div>
+<!-- Two-Column Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- LEFT COLUMN: Inputs, Found Package, Merkle Steps, Claim History (approx 58% -> lg:col-span-7) -->
+<div class="lg:col-span-7 space-y-6">
+<!-- 1. Package Lookup Card -->
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 relative">
+<div class="flex items-center justify-between mb-5">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">manage_search</span>
+</div>
+<h2 class="font-headline font-bold text-lg text-slate-900">Package Lookup</h2>
+</div>
+<span class="text-xs font-label text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">Step 1 of 2</span>
+</div>
+<div class="space-y-4">
+<!-- Select Shipment -->
+<div>
+<label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5 font-label">
+                  Select Shipment Manifest
+                </label>
+<div class="relative">
+<select class="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-2.5 pl-3.5 pr-10 text-sm font-medium text-slate-800 focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-all">
+<option selected="">Shipment Alpha - Hardened (RFC-6962 Domain Tagged)</option>
+<option>Shipment Alpha - Standard Merkle Tree</option>
+<option>Shipment Beta - High Velocity (L2 Batch #109)</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Input Wallet Address -->
+<div>
+<div class="flex justify-between items-center mb-1.5">
+<label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider font-label">
+                    Your Wallet Address
+                  </label>
+<span class="text-[11px] text-blue-600 font-label font-medium cursor-pointer hover:underline">Autodetect Connected</span>
+</div>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 text-slate-400 flex items-center">
+<span class="material-symbols-outlined text-[18px]">wallet</span>
+</span>
+<input class="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-24 font-label text-sm text-slate-800 focus:border-blue-600 focus:ring-1 focus:ring-blue-600" type="text" value="0x11a0b38c412f8e91028374a819b788e4"/>
+<div class="absolute right-2 flex items-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors" title="Clear">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-colors" title="Copy Address">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick-Fill Address Pills -->
+<div>
+<span class="text-[11px] font-semibold text-slate-400 font-label uppercase tracking-wider block mb-2">Simulate Verified Recipient:</span>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1.5 rounded-lg text-xs font-label font-medium bg-blue-600 text-white shadow-sm shadow-blue-500/20 flex items-center gap-1.5 border border-blue-600">
+<span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+<span>Alice [0x11a0...f3]</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-label font-medium bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-blue-700 border border-slate-200 hover:border-blue-200 transition-colors">
+                    Bob [0x4b78...90]
+                  </button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-label font-medium bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-blue-700 border border-slate-200 hover:border-blue-200 transition-colors">
+                    Carol [0x80e2...bc]
+                  </button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-label font-medium bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-blue-700 border border-slate-200 hover:border-blue-200 transition-colors">
+                    Dave [0xfe33...01]
+                  </button>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-2">
+<button class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-headline font-bold text-sm rounded-xl shadow-md shadow-blue-600/25 flex items-center justify-center gap-2 transition-all">
+<span>Get My Receipt</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 2. Result Card: Package Found & Merkle Receipt -->
+<div class="bg-white rounded-2xl border-2 border-emerald-500/40 shadow-sm p-6 relative overflow-hidden">
+<!-- Top Verified Banner -->
+<div class="flex flex-wrap items-center justify-between pb-4 border-b border-slate-100 gap-2">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-sm shadow-emerald-500/30">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<h3 class="font-headline font-bold text-emerald-700 text-lg">Package Found!</h3>
+<span class="text-xs px-2.5 py-0.5 bg-emerald-50 text-emerald-700 font-semibold font-label rounded-full border border-emerald-200">
+                  VERIFIED
+                </span>
+</div>
+<span class="text-xs font-label text-slate-500 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-emerald-600">verified_user</span>
+                Pre-proof validated
+              </span>
+</div>
+<!-- Package Info Summary Strip -->
+<div class="py-5 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center border-b border-slate-100">
+<div>
+<span class="text-xs font-semibold text-slate-400 font-label uppercase">Recipient Address</span>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="font-label font-bold text-slate-800 text-sm">0x11a0...f3</span>
+<span class="text-xs text-slate-500">(Alice)</span>
+<button class="p-1 text-slate-400 hover:text-blue-600 transition-colors" title="Copy">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+</button>
+</div>
+<div class="mt-2">
+<span class="inline-block text-[11px] font-label text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                    Leaf #0 · Receipt: 3 hashes · Depth: 3 · Domain Prefix: 0x00
+                  </span>
+</div>
+</div>
+<div class="sm:text-right">
+<span class="text-xs font-semibold text-slate-400 font-label uppercase">Eligible Allocation</span>
+<div class="flex sm:justify-end items-center gap-2 mt-1">
+<div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">toll</span>
+</div>
+<span class="font-headline font-extrabold text-3xl text-emerald-600">100 Tokens</span>
+</div>
+<span class="text-[11px] font-label text-slate-500">Asset: SDROP Governance &amp; Delivery Gas</span>
+</div>
+</div>
+<!-- Cryptographic Receipt (Merkle Proof Steps) Section -->
+<div class="mt-5">
+<div class="flex items-center justify-between mb-3">
+<h4 class="font-headline font-bold text-sm text-slate-800 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-blue-600">account_tree</span>
+<span>Cryptographic Receipt (Merkle Proof Steps)</span>
+</h4>
+<span class="text-xs font-label text-blue-600 bg-blue-50 px-2 py-0.5 rounded">Exact 3 Hashes</span>
+</div>
+<!-- 3 Proof Step Cards -->
+<div class="space-y-2.5">
+<!-- Step 1 -->
+<div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-blue-200 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 font-label text-xs font-bold flex items-center justify-center">1</span>
+<span class="text-[10px] font-extrabold font-label tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200">[RIGHT SIBLING]</span>
+<span class="text-xs font-body text-slate-600">Sibling Leaf (PKG-002)</span>
+</div>
+<div class="flex items-center gap-2 font-label text-xs bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800">
+<span class="text-blue-600 font-mono">0x7c9d4e92...3a8b</span>
+<span class="material-symbols-outlined text-[14px] text-slate-400">lock</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-blue-200 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 font-label text-xs font-bold flex items-center justify-center">2</span>
+<span class="text-[10px] font-extrabold font-label tracking-wider px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200">[LEFT SIBLING]</span>
+<span class="text-xs font-body text-slate-600">Hub B Sub-Tree Hash</span>
+</div>
+<div class="flex items-center gap-2 font-label text-xs bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800">
+<span class="text-indigo-600 font-mono">0xa3f2b189...cc45</span>
+<span class="material-symbols-outlined text-[14px] text-slate-400">hub</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:border-blue-200 transition-colors">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 font-label text-xs font-bold flex items-center justify-center">3</span>
+<span class="text-[10px] font-extrabold font-label tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-700 border border-blue-200">[RIGHT SIBLING]</span>
+<span class="text-xs font-body text-slate-600">Master Seal Component</span>
+</div>
+<div class="flex items-center gap-2 font-label text-xs bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-800">
+<span class="text-blue-600 font-mono">0xf8c2e917...9921</span>
+<span class="material-symbols-outlined text-[14px] text-slate-400">verified</span>
+</div>
+</div>
+</div>
+<!-- Merkle Consensus Root calculation box -->
+<div class="mt-4 p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[20px]">task_alt</span>
+<div>
+<span class="text-xs font-bold font-headline text-emerald-900 block">Calculated Root == Consensus Root</span>
+<span class="text-[11px] font-label text-emerald-700">0xc8a44e...3b42 (RFC-6962 Verified)</span>
+</div>
+</div>
+<div class="text-[10px] font-label px-2.5 py-1 bg-white rounded-md text-emerald-800 border border-emerald-200 font-bold">
+                  MATCH CONFIRMED
+                </div>
+</div>
+<!-- Claim Actions -->
+<div class="mt-6 space-y-3">
+<button class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-headline font-bold text-base rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[20px]">lock_open</span>
+<span>Claim 100 Tokens</span>
+</button>
+<!-- Green success banner -->
+<div class="p-3 rounded-xl bg-emerald-100/70 border border-emerald-300 text-emerald-900 text-xs font-body flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-700 text-[18px]">verified</span>
+<span><strong>Package claimed successfully!</strong> Funds transferred to <span class="font-label font-semibold">0x11a0...f3</span> on Block #8,941,205.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Claim History Table -->
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-slate-500">history</span>
+<h3 class="font-headline font-bold text-base text-slate-900">Recent Package Claims</h3>
+</div>
+<span class="text-xs font-label text-slate-500">Live L1 Finality</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs font-body border-collapse">
+<thead>
+<tr class="border-b border-slate-200 text-slate-400 font-label font-semibold uppercase tracking-wider">
+<th class="py-2.5 px-3">Recipient Address</th>
+<th class="py-2.5 px-3">Token Amount</th>
+<th class="py-2.5 px-3">Verification Status</th>
+<th class="py-2.5 px-3">Timestamp</th>
+<th class="py-2.5 px-3 text-right">Tx Receipt</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3 px-3 font-label font-medium text-slate-800">
+                      0x11a0...f3 <span class="text-slate-400 font-normal">(Alice)</span>
+</td>
+<td class="py-3 px-3 font-label font-bold text-slate-900">100 SDROP</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-label font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        Delivered
+                      </span>
+</td>
+<td class="py-3 px-3 text-slate-500 font-label">2 mins ago</td>
+<td class="py-3 px-3 text-right">
+<a class="text-blue-600 hover:text-blue-800 inline-flex items-center" href="#" title="View Transaction">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3 px-3 font-label font-medium text-slate-800">
+                      0x4b78...90 <span class="text-slate-400 font-normal">(Bob)</span>
+</td>
+<td class="py-3 px-3 font-label font-bold text-slate-900">250 SDROP</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-label font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                        Pending Settlement
+                      </span>
+</td>
+<td class="py-3 px-3 text-slate-500 font-label">14 mins ago</td>
+<td class="py-3 px-3 text-right">
+<a class="text-blue-600 hover:text-blue-800 inline-flex items-center" href="#" title="View Transaction">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3 px-3 font-label font-medium text-slate-800">
+                      0x80e2...bc <span class="text-slate-400 font-normal">(Carol)</span>
+</td>
+<td class="py-3 px-3 font-label font-bold text-slate-900">500 SDROP</td>
+<td class="py-3 px-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-label font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        Delivered
+                      </span>
+</td>
+<td class="py-3 px-3 text-slate-500 font-label">1 hour ago</td>
+<td class="py-3 px-3 text-right">
+<a class="text-blue-600 hover:text-blue-800 inline-flex items-center" href="#" title="View Transaction">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Merkle Path Visualizer & How It Works (approx 42% -> lg:col-span-5) -->
+<div class="lg:col-span-5 space-y-6">
+<!-- 1. Card: Receipt Path Visualizer -->
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 relative">
+<div class="flex items-center justify-between mb-5">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">schema</span>
+</div>
+<h3 class="font-headline font-bold text-base text-slate-900">Receipt Path Visualizer</h3>
+</div>
+<span class="text-[11px] font-label font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">
+                ACTIVE AUDIT
+              </span>
+</div>
+<!-- Merkle Tree Blueprint Diagram -->
+<div class="relative bg-slate-50/80 rounded-xl p-5 border border-slate-200 overflow-hidden">
+<!-- SVG Connector Lines layer -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<!-- Root to Hub A (Active Path) -->
+<line stroke="#1a56db" stroke-dasharray="4 2" stroke-width="2.5" x1="50%" x2="28%" y1="56" y2="128"></line>
+<!-- Root to Hub B (Sibling) -->
+<line stroke="#cbd5e1" stroke-width="1.5" x1="50%" x2="72%" y1="56" y2="128"></line>
+<!-- Hub A to PKG-001 (Alice) (Active Path) -->
+<line stroke="#10b981" stroke-width="2.5" x1="28%" x2="16%" y1="168" y2="236"></line>
+<!-- Hub A to PKG-002 (Sibling) -->
+<line stroke="#0ea5e9" stroke-dasharray="2 2" stroke-width="2" x1="28%" x2="40%" y1="168" y2="236"></line>
+<!-- Hub B to PKG-003 & 004 (Inactive) -->
+<line stroke="#e2e8f0" stroke-width="1.5" x1="72%" x2="60%" y1="168" y2="236"></line>
+<line stroke="#e2e8f0" stroke-width="1.5" x1="72%" x2="84%" y1="168" y2="236"></line>
+</svg>
+<!-- Node Layout -->
+<div class="relative z-10 flex flex-col items-center gap-7">
+<!-- Top Root Node: Master Seal -->
+<div class="flex flex-col items-center">
+<div class="px-3.5 py-1.5 rounded-xl bg-amber-50 border-2 border-amber-400 shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-600 text-[16px]">verified</span>
+<div class="text-left font-label">
+<div class="text-[9px] uppercase tracking-wider text-amber-800 font-bold">Consensus Root</div>
+<div class="text-xs font-bold text-slate-800">0xc8a4...3b42</div>
+</div>
+</div>
+<span class="text-[9px] font-label text-slate-400 mt-1">Master Seal (Block #8,941,200)</span>
+</div>
+<!-- Intermediate Hub Level -->
+<div class="w-full flex justify-around px-2">
+<!-- Hub A (On Active Path) -->
+<div class="flex flex-col items-center">
+<div class="px-2.5 py-1.5 rounded-lg bg-blue-50 border-2 border-blue-600 shadow-sm flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+<div class="text-left font-label">
+<div class="text-[8px] uppercase tracking-wider text-blue-700 font-bold">Hub A Path</div>
+<div class="text-[11px] font-semibold text-slate-800">0x9d4e...</div>
+</div>
+</div>
+</div>
+<!-- Hub B (Sibling Subtree) -->
+<div class="flex flex-col items-center">
+<div class="px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 shadow-sm flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+<div class="text-left font-label">
+<div class="text-[8px] uppercase tracking-wider text-slate-500 font-bold">Hub B (Sibling)</div>
+<div class="text-[11px] font-semibold text-slate-600">0xa3f2...</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Leaf Level (Packages) -->
+<div class="w-full grid grid-cols-4 gap-1.5 text-center pt-2">
+<!-- Alice PKG-001 (Target) -->
+<div class="flex flex-col items-center">
+<div class="w-full py-1.5 px-1 rounded-lg bg-emerald-50 border-2 border-emerald-500 shadow-sm flex flex-col items-center">
+<span class="material-symbols-outlined text-emerald-600 text-[14px]">local_shipping</span>
+<span class="font-label font-bold text-[10px] text-emerald-800">PKG-001</span>
+<span class="font-label text-[8px] text-emerald-600">0x11a0...</span>
+</div>
+<span class="text-[8px] font-label font-bold text-emerald-700 mt-1 bg-emerald-100/80 px-1 rounded">You</span>
+</div>
+<!-- PKG-002 (Right Sibling) -->
+<div class="flex flex-col items-center">
+<div class="w-full py-1.5 px-1 rounded-lg bg-sky-50 border border-sky-400 shadow-sm flex flex-col items-center">
+<span class="material-symbols-outlined text-sky-600 text-[14px]">token</span>
+<span class="font-label font-bold text-[10px] text-sky-800">PKG-002</span>
+<span class="font-label text-[8px] text-sky-600">0x7c9d...</span>
+</div>
+<span class="text-[8px] font-label text-sky-700 mt-1">Sibling</span>
+</div>
+<!-- PKG-003 (Other) -->
+<div class="flex flex-col items-center opacity-50">
+<div class="w-full py-1.5 px-1 rounded-lg bg-white border border-slate-200 flex flex-col items-center">
+<span class="material-symbols-outlined text-slate-400 text-[14px]">inventory_2</span>
+<span class="font-label font-semibold text-[10px] text-slate-600">PKG-003</span>
+<span class="font-label text-[8px] text-slate-400">0x5b19...</span>
+</div>
+<span class="text-[8px] font-label text-slate-400 mt-1">Branch</span>
+</div>
+<!-- PKG-004 (Other) -->
+<div class="flex flex-col items-center opacity-50">
+<div class="w-full py-1.5 px-1 rounded-lg bg-white border border-slate-200 flex flex-col items-center">
+<span class="material-symbols-outlined text-slate-400 text-[14px]">inventory_2</span>
+<span class="font-label font-semibold text-[10px] text-slate-600">PKG-004</span>
+<span class="font-label text-[8px] text-slate-400">0x44ce...</span>
+</div>
+<span class="text-[8px] font-label text-slate-400 mt-1">Branch</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Visual Legend -->
+<div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] font-label">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span class="text-slate-600">Your Package (Leaf #0)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+<span class="text-slate-600">Proof Siblings (Receipt)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+<span class="text-slate-600">Master Seal</span>
+</div>
+</div>
+<!-- Callout Note -->
+<div class="mt-4 p-3 bg-blue-50/70 border border-blue-200/70 rounded-xl text-xs text-blue-900 font-body flex items-start gap-2.5">
+<span class="material-symbols-outlined text-blue-600 text-[18px] shrink-0 mt-0.5">info</span>
+<span>
+                Your receipt proves your package exists in this shipment without revealing anyone else's data or the rest of the tree contents.
+              </span>
+</div>
+</div>
+<!-- 2. Card: How It Works Explanation -->
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+<div class="flex items-center gap-2 mb-4">
+<div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">security</span>
+</div>
+<h3 class="font-headline font-bold text-base text-slate-900">Cryptographic Proof Verification</h3>
+</div>
+<div class="space-y-4">
+<!-- Step 1 -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+<span class="material-symbols-outlined text-[18px]">barcode_scanner</span>
+</div>
+<div>
+<h4 class="font-headline text-xs font-bold text-slate-900">1. Warehouse manifests package</h4>
+<p class="font-body text-xs text-slate-600 mt-0.5">
+                    Scans your delivery package and securely commits its leaf hash <code class="font-label text-blue-600 bg-slate-100 px-1 py-0.2 rounded">SHA256(0x00 || package_data)</code> to the delivery chain.
+                  </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</div>
+<div>
+<h4 class="font-headline text-xs font-bold text-slate-900">2. You receive cryptographic receipt</h4>
+<p class="font-body text-xs text-slate-600 mt-0.5">
+                    When requesting a claim, the smart contract delivers a minimal proof path consisting of 3 sibling hashes.
+                  </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
+<div>
+<h4 class="font-headline text-xs font-bold text-slate-900">3. Reconstruct &amp; Validate Master Seal</h4>
+<p class="font-body text-xs text-slate-600 mt-0.5">
+                    Your client hashes your package with the sibling receipts. If the resulting root matches the on-chain Master Seal, your 100 tokens are instantly released.
+                  </p>
+</div>
+</div>
+</div>
+<!-- Zero-Knowledge Privacy Callout Box -->
+<div class="mt-6 border-l-4 border-indigo-500 bg-indigo-50/60 p-4 rounded-r-xl">
+<div class="flex items-center gap-1.5 mb-1 text-indigo-900 font-headline font-bold text-xs">
+<span class="material-symbols-outlined text-indigo-600 text-[16px]">visibility_off</span>
+<span>Zero-Knowledge Privacy</span>
+</div>
+<p class="text-xs text-indigo-950 font-body leading-relaxed">
+                Zero-knowledge: you mathematically prove your package exists without revealing the entire shipment manifest or exposing other recipients' private delivery tokens.
+              </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-slate-50 dark:bg-slate-50 border-t border-slate-200 dark:border-slate-200 docked full-width bottom flat no shadows mt-auto">
+<div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+<div class="flex flex-col sm:flex-row items-center gap-3">
+<span class="font-headline text-sm font-bold text-slate-800 dark:text-slate-800 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-blue-600 text-[18px]">shield</span>
+          SafeDrop Protocol
+        </span>
+<span class="hidden sm:inline text-slate-300">|</span>
+<p class="font-body text-xs text-slate-500 text-center sm:text-left">
+          © 2025 SafeDrop. Provably Secure Delivery Chain Protocol. Based on Merkle Tree Consensus Research.
+        </p>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-6 font-body text-xs text-slate-500">
+<a class="text-slate-500 hover:text-blue-600 transition-colors duration-150 hover:underline" href="#">Whitepaper</a>
+<a class="text-slate-500 hover:text-blue-600 transition-colors duration-150 hover:underline" href="#">Cryptographic Audit</a>
+<a class="text-slate-500 hover:text-blue-600 transition-colors duration-150 hover:underline" href="#">Protocol Docs</a>
+<a class="text-slate-500 hover:text-blue-600 transition-colors duration-150 hover:underline" href="#">Contact Security Lab</a>
+</div>
+</div>
+</footer>
+</body></html>
